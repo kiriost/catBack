@@ -42,7 +42,7 @@ var getBookInfo = (row, offset) => {
 var distinctBookInfo = (row, is_show, offset) => {
     //筛选上架和未上架书籍的信息
     let returnData = {}
-    let mySql1 = 'SELECT id, book_name, cover, book_type, author, is_show, book.book_describe describe from book where is_show = ? limit ?, ?'
+    let mySql1 = 'SELECT id, book_name, cover, book_type, author, is_show, book.book_describe from book where is_show = ? limit ?, ?'
     let mySqlData1 = [is_show, row, offset]
     let mySql2 = 'SELECT count(*) allNumber from book where is_show = ?'
     let mySqlData2 = [is_show]
@@ -75,7 +75,7 @@ var searchBookInfo = (row, field, offset) => {
     field = '%' + field + '%'
     let returnData = {}
     let mySql1 = 'SELECT \
-    id, book_name, cover, book_type, author, is_show, book.book_describe describe \
+    id, book_name, cover, book_type, author, is_show, book.book_describe \
     from book \
     where book_name like ? or author like ? limit ?, ?'
     let mySqlData1 = [field, field, row, offset]
