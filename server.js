@@ -12,7 +12,7 @@ var pool  = mysql.createPool({
 var getBookInfo = (row, offset) => {
     //得到所有书籍的信息
     let returnData = {}
-    let mySql1 = 'SELECT id, book_name, cover, book_type, author, is_show, book.describe from book limit ?, ?'
+    let mySql1 = 'SELECT id, book_name, cover, book_type, author, is_show, book.book_describe from book limit ?, ?'
     let mySqlData1 = [row, offset]
     let mySql2 = 'SELECT count(*) allNumber from book'
     let promise = new Promise((resolve, reject) => {
@@ -42,7 +42,7 @@ var getBookInfo = (row, offset) => {
 var distinctBookInfo = (row, is_show, offset) => {
     //筛选上架和未上架书籍的信息
     let returnData = {}
-    let mySql1 = 'SELECT id, book_name, cover, book_type, author, is_show, book.describe from book where is_show = ? limit ?, ?'
+    let mySql1 = 'SELECT id, book_name, cover, book_type, author, is_show, book.book_describe describe from book where is_show = ? limit ?, ?'
     let mySqlData1 = [is_show, row, offset]
     let mySql2 = 'SELECT count(*) allNumber from book where is_show = ?'
     let mySqlData2 = [is_show]
@@ -75,7 +75,7 @@ var searchBookInfo = (row, field, offset) => {
     field = '%' + field + '%'
     let returnData = {}
     let mySql1 = 'SELECT \
-    id, book_name, cover, book_type, author, is_show, book.describe \
+    id, book_name, cover, book_type, author, is_show, book.book_describe describe \
     from book \
     where book_name like ? or author like ? limit ?, ?'
     let mySqlData1 = [field, field, row, offset]
@@ -483,7 +483,7 @@ var reqBookDetails = (id) => {
 var insertBookDetails = (info) => {
     //插入书籍详细信息
     let returnData = {}
-    let mySql1 = 'insert into book (author, book_name, cover, book.describe, book_type)\
+    let mySql1 = 'insert into book (author, book_name, cover, book.book_describe, book_type)\
                     values(?, ?, ?, ?, ?)'
     let mySqlData1 = [info.author, info.book_name, info.cover, info.describe, info.book_type]
     let promise = new Promise((resolve, reject) => {
@@ -503,7 +503,7 @@ var insertBookDetails = (info) => {
 
 var updateBookDetails = (info, id) => {
     //更新书籍的详细信息
-    let mySql1 = 'update  book set author=?, book_name=?, cover=?, book.describe=?, book_type=?\
+    let mySql1 = 'update  book set author=?, book_name=?, cover=?, book.book_describe=?, book_type=?\
                     where id=?'
     let mySqlData1 = [info.author, info.book_name, info.cover, info.describe, info.book_type, id]
     let promise = new Promise((resolve, reject) => {
