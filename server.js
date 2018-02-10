@@ -122,6 +122,7 @@ var deleteBook = (id) => {
                     resolve(1)
                     connection.release();
                     if (error) throw reject(error);
+                });
 
                 if (error) throw reject(error);
             });
@@ -507,6 +508,7 @@ var insertBookDetails = (info) => {
                     //console.log('查询2', results.insertId)
                     connection.release()
                     if (error) throw reject(error);
+                });
 
                 if (error) throw reject(error);
             });
