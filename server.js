@@ -106,16 +106,23 @@ var searchBookInfo = (row, field, offset) => {
 }
 
 var deleteBook = (id) => {
-    //删除评论
+    //删除书籍
     let mySql1 = 'delete from book where id=?'
     let mySqlData1 = [id]
+    let mySql2 = 'delete from book_profile where book_id=?'
+    let mySqlData2 = [id]
     let promise = new Promise((resolve, reject) => {
         pool.getConnection(function(err, connection) {
 
             connection.query(mySql1, mySqlData1, function (error, results, fields) {
-                console.log('查询1', results)
-                resolve(1)
-                connection.release();
+                //console.log('查询1', results)
+
+                connection.query(mySql2, mySqlData2, function (error, results, fields) {
+                    //console.log('查询2', results)
+                    resolve(1)
+                    connection.release();
+                    if (error) throw reject(error);
+
                 if (error) throw reject(error);
             });
 
@@ -486,13 +493,21 @@ var insertBookDetails = (info) => {
     let mySql1 = 'insert into book (author, book_name, cover, book.book_describe, book_type)\
                     values(?, ?, ?, ?, ?)'
     let mySqlData1 = [info.author, info.book_name, info.cover, info.describe, info.book_type]
+    let mySql2 = 'insert into book_profile (book_id) values(?)'
+    let returnId = ''
     let promise = new Promise((resolve, reject) => {
         pool.getConnection(function(err, connection) {
 
             connection.query(mySql1, mySqlData1, function (error, results, fields) {
                 //console.log('查询1', results.insertId)
+                returnId = results.insertId
                 resolve(results.insertId)
-                connection.release()
+
+                connection.query(mySql2, [returnId], function (error, results, fields) {
+                    //console.log('查询2', results.insertId)
+                    connection.release()
+                    if (error) throw reject(error);
+
                 if (error) throw reject(error);
             });
 
