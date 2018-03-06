@@ -14,6 +14,9 @@
         </div>
       </div>
     </div>
+    <div class="footer">
+      猫阅读 ©2017 管理后台
+    </div>
   </div>
 </template>
 <script>
@@ -84,8 +87,7 @@ export default {
 }
 
 .content{
-  width: 90%;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .breadcrumb{
@@ -94,8 +96,7 @@ export default {
 
 .body{
   background-color: white;
-  border-radius: 5px;
-  min-height: 500px;
+  min-height: 700px;
 }
 
 .footer{
