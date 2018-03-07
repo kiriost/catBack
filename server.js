@@ -640,6 +640,48 @@ var insertManyChapter = (info) => {
     return promise  
 }
 
+var getOnRackItem = (strBookId, row, offset, searchTxt) => {
+    //得到所有书籍的信息
+    let field = '%' + searchTxt + '%'
+    let returnData = {}
+    console.log(strBookId)
+    let mySql1 = 'SELECT * from book where id in ' + strBookId
+    let mySql2 = 'SELECT * from book where id not in ' + strBookId + ' and book_name like ? limit ?, ?'
+    let mySql3 = 'SELECT count(*) allNumber from book where id not in ' + strBookId
+    let promise = new Promise((resolve, reject) => {
+        pool.getConnection(function(err, connection) {
+
+            connection.query(mySql1, function (error, results, fields) {
+                //console.log('查询1', results)
+                returnData.rackData = results
+
+                connection.query(mySql2, [field, row, offset], function (error, results, fields) {
+                    //console.log('查询2', results)
+                    returnData.tableData = results
+                    //console.log('合并后', returnData)
+                    resolve(returnData)
+                    //connection.release();
+
+                    connection.query(mySql3, function (error, results, fields) {
+                        //console.log('查询3', results)
+                        returnData.allPageNum = results
+                        //console.log('合并后', returnData)
+                        resolve(returnData)
+                        connection.release();
+                        if (error) throw reject(error);
+                    })
+
+                    if (error) throw reject(error);
+                })
+
+                if (error) throw reject(error);
+            });
+
+        });  
+    });
+    return promise  
+}
+
 module.exports = {      
     getBookInfo: getBookInfo,
     distinctBookInfo: distinctBookInfo,
@@ -664,5 +706,6 @@ module.exports = {
     reqChapterContant: reqChapterContant,
     updateChapterContent: updateChapterContent,
     deleteChapter: deleteChapter,
-    insertManyChapter: insertManyChapter
+    insertManyChapter: insertManyChapter,
+    getOnRackItem: getOnRackItem
 };

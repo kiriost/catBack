@@ -7,6 +7,7 @@ var products = [{
 }];
 
 const sql = require('../server');
+const redisSql = require('../redisSql');
 
 module.exports = {
     'POST /api/getBookInfo': async (ctx, next) => {
@@ -40,7 +41,7 @@ module.exports = {
         }).catch((data) => {
             console.dir(data)
         })
-    },
+    }, 
 
      'POST /api/searchBookInfo': async (ctx, next) => {
         //返回搜索书籍信息
@@ -373,5 +374,46 @@ module.exports = {
         }).catch((data) => {
             console.dir(data)
         })
-    }
+    },
+
+    'POST /api/getOnRack': async (ctx, next) => {
+        //查询上架书籍
+        //console.log('ctx数据', ctx.request.body)
+        await redisSql.getOnRack(ctx.request.body.index).then((data) => {
+            ctx.response.type = 'application/json';
+            ctx.response.body = {
+                rackData: data
+            }
+        }).catch((data) => {
+            console.dir(data)
+        })
+    },
+
+    'POST /api/getOnRackItem': async (ctx, next) => {
+        //查询上架书籍的具体信息
+        let row = ctx.request.body.pageNumber
+        let offset = 10
+        //console.log('ctx数据', ctx.request.body)
+        await sql.getOnRackItem(ctx.request.body.strBookId, row, offset, ctx.request.body.searchTxt).then((data) => {
+            ctx.response.type = 'application/json';
+            ctx.response.body = {
+                rackData: data
+            }
+        }).catch((data) => {
+            console.dir(data)
+        })
+    },
+
+    'POST /api/sendList': async (ctx, next) => {
+        //下架书籍
+        console.log('ctx数据', ctx.request.body)
+        await redisSql.sendList(ctx.request.body.contant, ctx.request.body.index).then((data) => {
+            ctx.response.type = 'application/json';
+            ctx.response.body = {
+                statue: data
+            }
+        }).catch((data) => {
+            console.dir(data)
+        })
+    },
 }
